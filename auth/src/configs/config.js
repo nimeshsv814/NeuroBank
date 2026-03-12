@@ -3,7 +3,7 @@ dotenv.config();
 
 const _config = {
   PORT: process.env.PORT,
-  MONGOURI: process.env.MONGOURI,
+  MONGODB: process.env.MONGODB,
 };
 
 const config = Object.freeze(_config);
