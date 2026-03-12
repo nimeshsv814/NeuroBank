@@ -86,7 +86,9 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    const token = req.cookies.token;
+    const cookieToken = req.cookies?.token;
+    const headerToken = req.headers.authorization?.split(" ")[1];
+    const token = cookieToken || headerToken;
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
@@ -94,7 +96,12 @@ export const logout = async (req, res) => {
     await redis.set(`blacklist:${token}`, "true", {
       ex: Math.max(Number(config.JWT_EXPIRE) || 3600, 1),
     });
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: config.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+    });
 
     return res.status(200).json({ message: "User is Logout" });
   } catch (error) {
