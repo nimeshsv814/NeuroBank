@@ -84,8 +84,10 @@ export const logout = async (req, res) => {
     if (!token) {
       return res.status(400).json({ message: "No token provided" });
     }
+
     await redis.set(`blacklist:${token}`, "true", { ex: 3600 });
     res.clearCookie("token");
+
     return res.status(200).json({ message: "User is Logout" });
   } catch (error) {
     return res.status(500).json({
