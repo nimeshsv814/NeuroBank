@@ -8,13 +8,12 @@ export const register = async (req, res) => {
     const { fullName = {}, email, password } = req.body;
     const { firstName, lastName } = fullName;
 
-    if (!firstName || !lastName || !email || !password) {
-      return res.status(400).json({ message: "All Data is Required" });
+    if (!firstName || !email || !password) {
+      return res.status(400).json({ message: "Required data missing" });
     }
 
-    const isAlreadyExists = await User.findOne({
-      email: email.toLowerCase().trim(),
-    });
+    const isAlreadyExists = await User.findOne({ email });
+
     if (isAlreadyExists) {
       return res.status(409).json({ message: "Email already exists" });
     }
@@ -27,8 +26,16 @@ export const register = async (req, res) => {
       isVerifyEmail: false,
     });
 
-    return res.status(201).json({ message: "User is Created", user });
+    return res.status(201).json({
+      message: "User created",
+      user: {
+        id: user._id,
+        firstName: user.fullName.firstName,
+        email: user.email,
+      },
+    });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: error.message,
     });
@@ -40,7 +47,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "All Data is Required" });
+      return res.status(400).json({ message: "Required data missing" });
     }
 
     const user = await User.findOne({ email }).select("+password");
