@@ -37,11 +37,23 @@ export const getBalance = async (req, res) => {
         message: "Account not found",
       });
     }
-    const owner = req.user;
+    return res.status(200).json({ message: "Balance Retrieved", account });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
-    return res
-      .status(200)
-      .json({ message: "Balance Retrieved", account, owner });
+export const user = async (req, res) => {
+  try {
+    const owner = req.user;
+    if (!owner) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+    return res.status(200).json({ message: "User Retrieved", owner });
   } catch (error) {
     return res.status(500).json({
       message: error.message,
