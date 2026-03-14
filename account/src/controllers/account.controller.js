@@ -2,8 +2,15 @@ import Account from "../models/account.model.js";
 import generateAccountNumber from "../utils/generateNumber.js";
 
 export const createAccount = async (req, res) => {
-  console.log(req.user);
   try {
+    const accountExists = await Account.findOne({
+      owner: req.user.id,
+    });
+    if (accountExists) {
+      return res.status(400).json({
+        message: "Account already exists",
+      });
+    }
     const account = await Account.create({
       owner: req.user.id,
       accountNumber: generateAccountNumber(),
