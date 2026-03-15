@@ -1,21 +1,25 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Sparkles, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { useRegisterMutation } from "../services/auth.api";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [register, { isLoading, isError }] = useRegisterMutation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (firstName && lastName && email && password) {
-      // Mock registration & immediate login
-      dispatch();
+      register({
+        firstName,
+        lastName,
+        email,
+        password,
+      });
       navigate("/dashboard");
     }
   };
@@ -123,11 +127,17 @@ const Register = () => {
               </div>
             </div>
 
+            {isError && (
+              <p className="text-red-500 text-sm mt-2">
+                Registration failed. Please try again.
+              </p>
+            )}
+
             <button
               type="submit"
               className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-md dark:shadow-lg dark:shadow-blue-500/25 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all group mt-2"
             >
-              Create Account
+              {isLoading ? "Registering..." : "Create Account"}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>
