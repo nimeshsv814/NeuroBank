@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { Sparkles, Mail, Lock, ArrowRight } from 'lucide-react';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import { Sparkles, Mail, Lock, ArrowRight } from "lucide-react";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ const Login = () => {
     if (email && password) {
       // Mock login Action
       dispatch();
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
   };
 
@@ -23,23 +23,31 @@ const Login = () => {
       {/* Background glowing effects */}
       <div className="absolute top-1/4 -left-32 w-96 h-96 bg-blue-600/10 dark:bg-blue-600/20 rounded-full blur-[100px] mix-blend-screen pointer-events-none"></div>
       <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-indigo-600/10 dark:bg-indigo-600/20 rounded-full blur-[100px] mix-blend-screen pointer-events-none"></div>
-      
+
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-10">
           <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
             <Sparkles className="w-6 h-6 text-white" />
           </div>
-          <span className="font-bold text-3xl tracking-wide text-gray-900 dark:text-white">NeuroBank</span>
+          <span className="font-bold text-3xl tracking-wide text-gray-900 dark:text-white">
+            NeuroBank
+          </span>
         </div>
 
         <div className="glass-card rounded-3xl p-8 border border-gray-200 dark:border-white/5 relative z-10">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h2>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">Sign in to your account to continue</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Welcome Back
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
+            Sign in to your account to continue
+          </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">Email Address</label>
+              <label className="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                Email Address
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Mail className="h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -57,8 +65,15 @@ const Login = () => {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300">Password</label>
-                <a href="#" className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">Forgot password?</a>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-300">
+                  Password
+                </label>
+                <a
+                  href="#"
+                  className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                >
+                  Forgot password?
+                </a>
               </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -85,8 +100,11 @@ const Login = () => {
           </form>
 
           <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-            Don't have an account?{' '}
-            <Link to="/register" className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline"
+            >
               Create one now
             </Link>
           </p>
