@@ -1,8 +1,6 @@
 import React from "react";
 import { 
-  User, 
-  Mail, 
-  Phone, 
+  User,  
   Shield, 
   Bell, 
   Moon, 
@@ -14,9 +12,11 @@ import {
   Menu
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import {useProfileQuery} from "../services/auth.api"
 
 const ProfilePage = ({ onMenuClick }) => {
   const { theme, setTheme } = useTheme();
+  const {data: user} = useProfileQuery();
 
   const userStats = [
     { label: "Member Since", value: "Nov 2022" },
@@ -56,7 +56,7 @@ const ProfilePage = ({ onMenuClick }) => {
               </div>
               <div className="flex-1 text-center md:text-left">
                  <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
-                    <h3 className="text-2xl font-black text-gray-900 dark:text-white">Pranjal Kuhikar</h3>
+                    <h3 className="text-2xl font-black text-gray-900 dark:text-white">{user?.user?.fullName?.firstName} {user?.user?.fullName?.lastName}</h3>
                     <CheckCircle className="w-5 h-5 text-blue-500" />
                  </div>
                  <p className="text-gray-500 dark:text-gray-400 mb-6 font-medium">Verified Platinum Account</p>
@@ -82,16 +82,9 @@ const ProfilePage = ({ onMenuClick }) => {
                     </h3>
                     <div className="space-y-4">
                         <div className="group cursor-pointer">
-                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Email Address</label>
+                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1"> Email Address</label>
                             <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 dark:bg-white/5 border border-transparent group-hover:border-blue-500/30 transition-all mt-1">
-                                <span className="text-sm font-medium">pranjal@example.com</span>
-                                <ChevronRight className="w-4 h-4 text-gray-400" />
-                            </div>
-                        </div>
-                        <div className="group cursor-pointer">
-                            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Phone Number</label>
-                            <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 dark:bg-white/5 border border-transparent group-hover:border-blue-500/30 transition-all mt-1">
-                                <span className="text-sm font-medium">+91 98765 43210</span>
+                                <span className="text-sm font-medium">{user?.user?.email}</span>
                                 <ChevronRight className="w-4 h-4 text-gray-400" />
                             </div>
                         </div>
@@ -112,15 +105,6 @@ const ProfilePage = ({ onMenuClick }) => {
                                 <span className="text-sm font-medium">Change Password</span>
                             </div>
                             <ChevronRight className="w-4 h-4 text-gray-400" />
-                        </button>
-                        <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all group">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 flex items-center justify-center">
-                                    <Shield className="w-4 h-4" />
-                                </div>
-                                <span className="text-sm font-medium">Two-Factor Auth</span>
-                            </div>
-                            <div className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 text-[10px] font-bold">ENABLED</div>
                         </button>
                     </div>
                 </div>
@@ -146,17 +130,6 @@ const ProfilePage = ({ onMenuClick }) => {
                                 className={`w-12 h-6 rounded-full relative p-1 cursor-pointer transition-colors ${theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-200'}`}
                             >
                                 <div className={`w-4 h-4 bg-white rounded-full transition-all ${theme === 'dark' ? 'ml-auto' : ''}`}></div>
-                            </div>
-                        </div>
-                        <div className="flex items-center justify-between p-3 border-b border-gray-100 dark:border-white/5 last:border-0">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-500/10 text-orange-600 flex items-center justify-center">
-                                    <Bell className="w-4 h-4" />
-                                </div>
-                                <span className="text-sm font-medium">Push Notifications</span>
-                            </div>
-                            <div className="w-12 h-6 rounded-full bg-emerald-600 relative p-1 cursor-pointer">
-                                <div className="w-4 h-4 bg-white rounded-full ml-auto"></div>
                             </div>
                         </div>
                     </div>

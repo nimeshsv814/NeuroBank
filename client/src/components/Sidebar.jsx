@@ -3,13 +3,9 @@ import { useTheme } from "../context/ThemeContext";
 import { useLogoutMutation, useProfileQuery } from "../services/auth.api";
 import {
   LayoutDashboard,
-  Compass,
   CreditCard,
   ArrowRightLeft,
   FileText,
-  TrendingUp,
-  Landmark,
-  Calculator,
   Moon,
   Sun,
   Sparkles,
