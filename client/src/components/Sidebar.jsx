@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { useLogoutMutation, useProfileQuery } from "../services/auth.api";
 import {
@@ -32,15 +32,17 @@ const Sidebar = ({ isOpen, onClose }) => {
     }
   };
 
+  const location = useLocation();
   const menuItems = [
-    { icon: LayoutDashboard, label: "Dashboard", active: true },
-    { icon: Compass, label: "Neuro AI", active: false },
-    { icon: CreditCard, label: "Accounts", active: false },
-    { icon: ArrowRightLeft, label: "Transactions", active: false },
-    { icon: FileText, label: "Reports", active: false },
-    { icon: TrendingUp, label: "Investments", active: false },
-    { icon: Landmark, label: "Loans", active: false },
-    { icon: Calculator, label: "Taxes", active: false },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+    { icon: ArrowRightLeft, label: "Transfer", path: "/transfer" },
+    { icon: Compass, label: "Neuro AI", path: "/ai" },
+    { icon: CreditCard, label: "Accounts", path: "/accounts" },
+    { icon: ArrowRightLeft, label: "Transactions", path: "/transactions" },
+    { icon: FileText, label: "Reports", path: "/reports" },
+    { icon: TrendingUp, label: "Investments", path: "/investments" },
+    { icon: Landmark, label: "Loans", path: "/loans" },
+    { icon: Calculator, label: "Taxes", path: "/taxes" },
   ];
 
   return (
@@ -124,19 +126,23 @@ const Sidebar = ({ isOpen, onClose }) => {
         </div>
 
         <nav className="flex-1 space-y-1">
-          {menuItems.map((item, index) => (
-            <button
-              key={index}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                item.active
-                  ? "bg-blue-50 text-blue-700 dark:bg-[#1e2235] dark:text-white font-medium"
-                  : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#1a1d2d] hover:text-gray-900 dark:hover:text-gray-200"
-              }`}
-            >
-              <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
-            </button>
-          ))}
+          {menuItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={index}
+                to={item.path}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                  isActive
+                    ? "bg-blue-50 text-blue-700 dark:bg-[#1e2235] dark:text-white font-medium"
+                    : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#1a1d2d] hover:text-gray-900 dark:hover:text-gray-200"
+                }`}
+              >
+                <item.icon className="w-5 h-5" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="mt-auto pt-6 space-y-4">
