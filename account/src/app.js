@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser());
-app.use(cors("*"));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 app.use("/api", indexRoute);
 
@@ -17,10 +17,10 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.use((req, res, next) => {
-  res.status(404).json({
+app.use((err, req, res, next) => {
+  res.status(500).json({
     success: false,
-    message: "API endpoint not found",
+    message: "Internal server error",
   });
 });
 

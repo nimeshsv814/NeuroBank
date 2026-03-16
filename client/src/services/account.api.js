@@ -7,6 +7,7 @@ export const accountApi = createApi({
     baseUrl: "http://localhost:3001/api/account",
     credentials: "include",
   }),
+  tagTypes: ["Account"],
   endpoints: (build) => ({
     createAccount: build.mutation({
       query: (body) => ({
@@ -14,16 +15,18 @@ export const accountApi = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Account"],
     }),
     getAccount: build.query({
       query: () => ({
         url: "/getAccount",
         method: "GET",
       }),
+      providesTags: ["Account"],
     }),
-    profile: build.query({
+    user: build.query({
       query: () => ({
-        url: "/profile",
+        url: "/user",
         method: "GET",
       }),
     }),

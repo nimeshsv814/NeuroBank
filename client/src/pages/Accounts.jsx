@@ -8,18 +8,22 @@ import {
   Lock,
   Loader2,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Wallet,
+  Globe,
+  TrendingUp,
+  Fingerprint
 } from "lucide-react";
 import { useGetAccountQuery, useCreateAccountMutation } from "../services/account.api";
 
 const Accounts = ({ onMenuClick }) => {
-  const { data, isLoading, error, refetch } = useGetAccountQuery();
+  const { data, isLoading, error } = useGetAccountQuery();
   const [createAccount, { isLoading: isCreating }] = useCreateAccountMutation();
 
   const handleCreateAccount = async () => {
     try {
       await createAccount({}).unwrap();
-      refetch();
+      // Refetch is handled automatically by RTK Query tags
     } catch (err) {
       console.error("Failed to create account:", err);
     }
@@ -28,7 +32,10 @@ const Accounts = ({ onMenuClick }) => {
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#0c0f1a]">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        <div className="relative">
+            <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
+            <Loader2 className="w-10 h-10 text-blue-600 animate-spin relative z-10" />
+        </div>
       </div>
     );
   }
@@ -38,44 +45,52 @@ const Accounts = ({ onMenuClick }) => {
     return (
       <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50 dark:bg-[#0c0f1a]">
         <div className="max-w-4xl mx-auto h-[80vh] flex flex-col items-center justify-center text-center">
-          <div className="w-24 h-24 bg-blue-600/10 rounded-full flex items-center justify-center mb-8 animate-bounce">
-            <Sparkles className="w-10 h-10 text-blue-600" />
+          <div className="relative mb-8 group">
+             <div className="absolute inset-0 bg-blue-600/20 blur-3xl rounded-full scale-150 animate-pulse"></div>
+             <div className="w-24 h-24 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-[2rem] flex items-center justify-center relative z-10 rotate-3 group-hover:rotate-6 transition-transform shadow-2xl shadow-blue-500/40">
+                <Sparkles className="w-10 h-10 text-white" />
+             </div>
           </div>
-          <h2 className="text-4xl font-black text-gray-900 dark:text-white mb-4">
-            Welcome to <span className="text-blue-600">NeuroBank</span>
+          <h2 className="text-4xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">
+            Elevate Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">Finance</span>
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 max-w-md mb-10 leading-relaxed">
-            Ready to elevate your financial life? Create your primary account in seconds and get access to premium features, AI insights, and global transfers.
+          <p className="text-gray-500 dark:text-gray-400 max-w-sm mb-10 leading-relaxed font-medium">
+            Join the elite circle of NeuroBank users and unlock a new dimension of digital banking.
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12 w-full max-w-2xl">
-             <div className="p-6 rounded-3xl bg-white dark:bg-[#0f1221] border border-gray-200 dark:border-white/5 flex flex-col items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+             <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#0f1221] border border-gray-100 dark:border-white/5 flex flex-col items-center gap-4 hover:border-blue-500/30 transition-all shadow-sm">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
                     <ShieldCheck className="w-6 h-6" />
                 </div>
-                <h4 className="font-bold text-sm">Secure by Design</h4>
-                <p className="text-xs text-center text-gray-500">Military-grade encryption for all your assets.</p>
+                <div className="text-center">
+                    <h4 className="font-bold text-sm text-gray-900 dark:text-white mb-1">Elite Security</h4>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Military-grade protection for your wealth.</p>
+                </div>
              </div>
-             <div className="p-6 rounded-3xl bg-white dark:bg-[#0f1221] border border-gray-200 dark:border-white/5 flex flex-col items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 flex items-center justify-center">
+             <div className="p-8 rounded-[2.5rem] bg-white dark:bg-[#0f1221] border border-gray-100 dark:border-white/5 flex flex-col items-center gap-4 hover:border-blue-500/30 transition-all shadow-sm">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 flex items-center justify-center">
                     <Zap className="w-6 h-6" />
                 </div>
-                <h4 className="font-bold text-sm">Instant Access</h4>
-                <p className="text-xs text-center text-gray-500">Virtual cards and instant global payments.</p>
+                <div className="text-center">
+                    <h4 className="font-bold text-sm text-gray-900 dark:text-white mb-1">Instant Scale</h4>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Deploy capital globally in milliseconds.</p>
+                </div>
              </div>
           </div>
 
           <button 
             onClick={handleCreateAccount}
             disabled={isCreating}
-            className="group flex items-center gap-3 px-12 py-5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg shadow-2xl shadow-blue-500/30 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50"
+            className="group relative flex items-center gap-3 px-14 py-5 rounded-[2rem] bg-gray-900 dark:bg-white text-white dark:text-black font-black text-lg overflow-hidden transition-all transform hover:scale-[1.03] active:scale-95 disabled:opacity-50"
           >
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             {isCreating ? (
-              <Loader2 className="w-6 h-6 animate-spin" />
+              <Loader2 className="w-6 h-6 animate-spin relative z-10" />
             ) : (
               <>
-                Create Your Account
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                <span className="relative z-10 group-hover:text-white transition-colors">Generate Portfolio</span>
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 relative z-10 group-hover:text-white transition-all" />
               </>
             )}
           </button>
@@ -90,122 +105,138 @@ const Accounts = ({ onMenuClick }) => {
   return (
     <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50 dark:bg-[#0c0f1a]">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
             <button
               onClick={onMenuClick}
-              className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-[#151828] border border-gray-200 dark:border-[#232738] text-gray-600 dark:text-gray-300 shadow-sm"
+              className="md:hidden w-12 h-12 flex items-center justify-center rounded-2xl bg-white dark:bg-[#151828] border border-gray-200 dark:border-[#232738] text-gray-600 dark:text-gray-300 shadow-sm"
             >
               <Menu className="w-5 h-5" />
             </button>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Account</h2>
+            <div>
+                <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">Main Vault</h2>
+                <p className="text-sm text-gray-500 font-medium">Manage your primary assets and liquidity</p>
+            </div>
           </div>
-          <div className="px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-500 text-xs font-bold uppercase tracking-widest border border-emerald-500/20">
-             {account.status}
+          <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+             <span className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.2em]">{account.status}</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Primary Account Card */}
-            <div className="lg:col-span-2">
-                <div className="p-8 rounded-[40px] bg-gradient-to-br from-blue-600 via-indigo-700 to-blue-800 text-white relative overflow-hidden shadow-2xl shadow-blue-900/20">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
-                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-400/10 rounded-full blur-2xl -ml-16 -mb-16"></div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            {/* Redesigned "Perfect and Nice" Account Card */}
+            <div className="lg:col-span-2 group">
+                <div className="relative p-10 rounded-[48px] overflow-hidden transition-all duration-700 transform hover:translate-y-[-4px]">
+                    {/* Background Layer (Animated Mesh Gradient) */}
+                    <div className="absolute inset-0 bg-[#0a0c14]"></div>
+                    <div className="absolute -top-[20%] -right-[10%] w-[80%] h-[120%] bg-gradient-to-br from-blue-600/40 via-indigo-600/20 to-transparent blur-[100px] rounded-full animate-pulse transition-all group-hover:scale-110"></div>
+                    <div className="absolute -bottom-[20%] -left-[10%] w-[60%] h-[100%] bg-gradient-to-tr from-purple-600/30 via-transparent to-transparent blur-[80px] rounded-full animate-pulse delay-700"></div>
                     
-                    <div className="flex justify-between items-start mb-20 relative z-10">
-                        <div>
-                            <p className="text-xs text-white/70 font-bold uppercase tracking-[0.2em] mb-2">Primary Account</p>
-                            <h3 className="text-2xl font-bold">{account.accountType === 'saving' ? 'Platinum Savings' : 'Premium Checking'}</h3>
-                        </div>
-                        <CreditCard className="w-10 h-10 text-white/30" />
-                    </div>
+                    {/* Border effect */}
+                    <div className="absolute inset-0 rounded-[48px] border border-white/10 group-hover:border-white/20 transition-colors pointer-events-none"></div>
+                    <div className="absolute inset-[1px] rounded-[47px] border border-white/5 pointer-events-none"></div>
 
-                    <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
-                        <div>
-                            <p className="text-xs text-white/50 mb-1 font-medium">Balance</p>
-                            <div className="flex items-baseline gap-2">
-                                <span className="text-sm text-white/70 font-mono">{account.currency}</span>
-                                <span className="text-5xl font-black tracking-tight">{account.balance.toLocaleString()}</span>
+                    {/* Card Content */}
+                    <div className="relative z-10 flex flex-col h-full min-h-[320px]">
+                        <div className="flex justify-between items-start mb-16">
+                            <div className="flex items-center gap-4">
+                                <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-2xl">
+                                    <Fingerprint className="w-7 h-7 text-white" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] text-white/40 font-black uppercase tracking-[0.3em] mb-1">Network Private</p>
+                                    <h4 className="text-lg font-bold text-white tracking-tight">{account.accountType === 'saving' ? 'Platinum Reserve' : 'Premium Flow'}</h4>
+                                </div>
+                            </div>
+                            <div className="flex flex-col items-end">
+                                <Sparkles className="w-6 h-6 text-indigo-400 mb-2 opacity-50 group-hover:opacity-100 transition-opacity duration-1000" />
+                                <span className="text-[10px] font-mono text-white/30 tracking-widest uppercase">ID: VAULT-00{account._id?.slice(-4)}</span>
                             </div>
                         </div>
-                        <div className="text-right">
-                            <p className="text-[10px] text-white/40 uppercase font-black tracking-widest mb-1">Account Number</p>
-                            <p className="text-lg font-mono font-bold tracking-wider">{account.accountNumber}</p>
+
+                        <div className="mt-auto flex flex-col md:flex-row md:items-end justify-between gap-10">
+                            <div>
+                                <p className="text-xs text-white/30 mb-3 font-bold uppercase tracking-[0.2em]">Net Worth Value</p>
+                                <div className="flex items-baseline gap-3">
+                                    <span className="text-lg text-white/20 font-mono font-black">{account.currency}</span>
+                                    <span className="text-6xl font-black tracking-tighter text-white drop-shadow-2xl">
+                                        {account.balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 py-5 group-hover:bg-white/10 transition-all">
+                                <p className="text-[10px] text-white/30 uppercase font-black tracking-widest mb-2">Access Key</p>
+                                <div className="flex items-center gap-3">
+                                    <div className="flex gap-1.5 items-center">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                                    </div>
+                                    <p className="text-xl font-mono font-black text-white tracking-[0.3em]">
+                                        {account.accountNumber.slice(-4)}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Account Details / Stats */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
-                    <div className="bg-white dark:bg-[#0f1221] p-6 rounded-3xl border border-gray-200 dark:border-white/5">
-                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-4">Currency</p>
-                        <p className="text-xl font-bold text-gray-900 dark:text-white uppercase">{account.currency}</p>
-                    </div>
-                    <div className="bg-white dark:bg-[#0f1221] p-6 rounded-3xl border border-gray-200 dark:border-white/5">
-                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-4">Created At</p>
-                        <p className="text-xl font-bold text-gray-900 dark:text-white">
-                           {new Date(account.createdAt).toLocaleDateString()}
-                        </p>
-                    </div>
-                    <div className="bg-white dark:bg-[#0f1221] p-6 rounded-3xl border border-gray-200 dark:border-white/5">
-                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-4">Daily Limit</p>
-                        <p className="text-xl font-bold text-gray-900 dark:text-white">$25,000</p>
-                    </div>
+                {/* Account Details / Stats Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
+                    {[
+                        { label: "Nominal Rate", value: "4.25%", icon: TrendingUp, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+                        { label: "Global Liquidity", value: "Liquid", icon: Globe, color: "text-blue-500", bg: "bg-blue-500/10" },
+                        { label: "Reserve Limit", value: "∞", icon: Wallet, color: "text-amber-500", bg: "bg-amber-500/10" }
+                    ].map((stat, i) => (
+                        <div key={i} className="bg-white dark:bg-[#0f1221] p-8 rounded-[2.5rem] border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all">
+                            <div className={`w-10 h-10 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center mb-6`}>
+                                <stat.icon className="w-5 h-5" />
+                            </div>
+                            <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-1">{stat.label}</p>
+                            <p className="text-xl font-black text-gray-900 dark:text-white uppercase">{stat.value}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
 
-            {/* Side Tools */}
+            {/* Side Control Panel */}
             <div className="space-y-6">
-                <div className="bg-white dark:bg-[#0f1221] rounded-[32px] border border-gray-200 dark:border-white/5 p-6 shadow-sm">
-                   <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-6 uppercase tracking-wider">Quick Actions</h3>
-                   <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-white/5 border border-transparent hover:border-blue-500/20 transition-all cursor-pointer group">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 flex items-center justify-center">
-                                <Lock className="w-5 h-5" />
-                            </div>
-                            <span className="text-sm font-bold">Freeze Card</span>
+                <div className="bg-white dark:bg-[#0f1221] rounded-[40px] border border-gray-100 dark:border-white/5 p-8 shadow-sm">
+                   <h3 className="text-xs font-black text-gray-900 dark:text-white mb-8 uppercase tracking-[0.3em]">Security Matrix</h3>
+                   <div className="space-y-4">
+                      {[
+                        { label: "Biometric Key", icon: Fingerprint, color: "blue", active: true },
+                        { label: "Geo-Lock", icon: Globe, color: "emerald", active: true },
+                        { label: "Freeze Assets", icon: Lock, color: "red", active: false }
+                      ].map((tool, i) => (
+                        <div key={i} className="flex items-center justify-between p-5 rounded-3xl bg-gray-50 dark:bg-white/[0.03] border border-transparent hover:border-blue-500/10 transition-all cursor-pointer group">
+                             <div className="flex items-center gap-4">
+                                <div className={`w-10 h-10 rounded-2xl bg-${tool.color}-500/10 text-${tool.color}-500 flex items-center justify-center`}>
+                                    <tool.icon className="w-5 h-5" />
+                                </div>
+                                <span className="text-sm font-black tracking-tight text-gray-700 dark:text-gray-300">{tool.label}</span>
+                             </div>
+                             <div className={`w-10 h-5 rounded-full relative p-1 transition-colors ${tool.active ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-white/10'}`}>
+                                <div className={`w-3 h-3 bg-white rounded-full transition-all ${tool.active ? 'ml-auto' : ''}`}></div>
+                             </div>
                         </div>
-                        <div className="w-10 h-5 bg-gray-200 dark:bg-white/10 rounded-full relative p-1 transition-colors group-hover:bg-blue-600/20">
-                            <div className="w-3 h-3 bg-white rounded-full"></div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-white/5 border border-transparent hover:border-emerald-500/20 transition-all cursor-pointer group">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-                                <ShieldCheck className="w-5 h-5" />
-                            </div>
-                            <span className="text-sm font-bold">Safe Guard</span>
-                        </div>
-                        <div className="w-10 h-5 bg-emerald-500 rounded-full relative p-1 transition-colors">
-                            <div className="w-3 h-3 bg-white rounded-full ml-auto"></div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between p-4 rounded-2xl bg-gray-50 dark:bg-white/5 border border-transparent hover:border-amber-500/20 transition-all cursor-pointer group">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 flex items-center justify-center">
-                                <Zap className="w-5 h-5" />
-                            </div>
-                            <span className="text-sm font-bold">Turbo Transfer</span>
-                        </div>
-                        <div className="w-10 h-5 bg-amber-500 rounded-full relative p-1 transition-colors">
-                            <div className="w-3 h-3 bg-white rounded-full ml-auto"></div>
-                        </div>
-                      </div>
+                      ))}
                    </div>
                 </div>
 
-                <div className="bg-white dark:bg-[#0f1221] rounded-[32px] border border-gray-200 dark:border-white/5 p-6 shadow-sm overflow-hidden relative">
-                    <div className="absolute inset-0 bg-linear-to-br from-blue-600/5 to-transparent"></div>
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider relative z-10">Add-ons</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-6 relative z-10">
-                        Unlock global investments and multi-currency support with NeuroBank Pro.
-                    </p>
-                    <button className="w-full py-3 rounded-xl bg-gray-900 dark:bg-blue-600 text-white font-bold text-xs uppercase tracking-widest relative z-10 hover:bg-gray-800 dark:hover:bg-blue-500 transition-all">
-                        Upgrade Now
-                    </button>
+                <div className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[40px] p-8 text-white relative overflow-hidden group shadow-2xl shadow-blue-600/20">
+                    <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl -mr-24 -mt-24 group-hover:scale-110 transition-transform duration-1000"></div>
+                    <div className="relative z-10">
+                        <Sparkles className="w-8 h-8 mb-6 opacity-30" />
+                        <h3 className="text-xl font-black mb-3 leading-tight tracking-tight text-white">Upgrade to<br />Alpha Prime</h3>
+                        <p className="text-white/60 text-xs mb-8 leading-relaxed font-medium">
+                            Join our exclusive tier for institutional-grade features and zero fees.
+                        </p>
+                        <button className="w-full py-4 rounded-2xl bg-white text-blue-600 font-black text-xs uppercase tracking-widest hover:bg-gray-100 transition-all shadow-xl">
+                            Claim Invitation
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
