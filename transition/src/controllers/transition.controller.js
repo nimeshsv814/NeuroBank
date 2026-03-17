@@ -1,4 +1,7 @@
 import Transition from "../models/transition.model.js";
+import Account from "../models/account.model.js";
+import Ledger from "../models/ledger.model.js";
+import mongoose from "mongoose";
 
 export const createTransition = async (req, res) => {
   const { fromAccount, toAccount, amount, idempotencyKey } = req.body;
@@ -56,7 +59,7 @@ export const createTransition = async (req, res) => {
 
   // Derive sender balance from ledger
   const senderBalance = await Ledger.findOne({
-    account: fromAccount,
+    accountId: fromAccount,
   });
   if (!senderBalance) {
     return res.status(400).json({
@@ -94,27 +97,25 @@ export const createTransition = async (req, res) => {
     const debitLedgerEntry = await Ledger.create(
       [
         {
-          account: fromAccount,
+          accountId: fromAccount,
           amount: amount,
-          transition: transition._id,
+          transitionId: transition._id,
           type: "debit",
         },
       ],
       { session },
     );
-    await (() => {
-      return new Promise((resolve) => {
-        setTimeout(resolve, 15 * 1000);
-      });
+    await new Promise((resolve) => {
+      setTimeout(resolve, 15 * 1000);
     });
 
     // Third create ledger entry for credit
     const creditLedgerEntry = await Ledger.create(
       [
         {
-          account: toAccount,
+          accountId: toAccount,
           amount: amount,
-          transition: transition._id,
+          transitionId: transition._id,
           type: "credit",
         },
       ],
