@@ -176,17 +176,26 @@ export const getTransitions = async (req, res) => {
 
 export const generateInitialFunds = async (req, res) => {
   try {
-    const { toAccount, amount } = req.body;
-    if (!toAccount || !amount) {
+    const { toAccount, amount, idempotencyKey } = req.body;
+    if (!toAccount || !amount || !idempotencyKey) {
       return res.status(400).json({
-        message: "All fields are required",
+        message: "All fields are required (toAccount, amount, idempotencyKey)",
       });
     }
 
-    const toUserAccount = await Account.findById(toAccount);
+    let toUserAccount;
+    // Check if toAccount is a valid ObjectId, otherwise treat it as an accountNumber
+    if (mongoose.Types.ObjectId.isValid(toAccount)) {
+      toUserAccount = await Account.findById(toAccount);
+    }
+
+    if (!toUserAccount) {
+      toUserAccount = await Account.findOne({ accountNumber: String(toAccount) });
+    }
+
     if (!toUserAccount) {
       return res.status(400).json({
-        message: "Target account does not exist",
+        message: "Target account does not exist. Please check the account ID or number.",
       });
     }
 

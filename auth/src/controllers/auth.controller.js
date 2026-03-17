@@ -2,6 +2,7 @@ import User from "../models/auth.model.js";
 import config from "../configs/config.js";
 import redis from "../utils/redis.js";
 import generateToken from "../utils/generateToken.js";
+import { publishToQueue } from "../broker/rabbit.js";
 import { parseExpToMs, parseExpToSec } from "../utils/parse.js";
 
 export const register = async (req, res) => {
@@ -30,11 +31,7 @@ export const register = async (req, res) => {
 
     return res.status(201).json({
       message: "User created",
-      user: {
-        id: user._id,
-        firstName: user.fullName.firstName,
-        email: user.email,
-      },
+      user,
     });
   } catch (error) {
     console.log(error);
@@ -52,7 +49,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Required data missing" });
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select("+password +systemUser");
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
@@ -73,6 +70,8 @@ export const login = async (req, res) => {
     });
 
     const { password: _pw, ...userSafe } = user.toObject();
+
+    publishToQueue("user.login", userSafe);
 
     return res
       .status(200)
@@ -113,7 +112,7 @@ export const logout = async (req, res) => {
 
 export const profile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).select("+systemUser");
     return res.status(200).json({ message: "User Profile", user });
   } catch (error) {
     return res.status(500).json({

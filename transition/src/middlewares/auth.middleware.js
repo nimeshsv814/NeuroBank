@@ -49,8 +49,11 @@ export const systemUserMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, config.JWT_SECRET);
+
     if (!decoded.systemUser) {
-      return res.status(403).json({ message: "User is not a system user" });
+      return res.status(403).json({
+        message: `${decoded.fullName.firstName} is not a system user`,
+      });
     }
     req.user = decoded;
     next();
