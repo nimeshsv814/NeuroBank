@@ -1,6 +1,10 @@
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { useLogoutMutation, useProfileQuery } from "../services/auth.api";
+import { authApi } from "../services/auth.api";
+import { accountApi } from "../services/account.api";
+import { transitionApi } from "../services/transition.api";
+import { useDispatch } from "react-redux";
 import {
   LayoutDashboard,
   CreditCard,
@@ -17,11 +21,16 @@ const Sidebar = ({ isOpen, onClose }) => {
   const [logout, { isLoading }] = useLogoutMutation();
   const { data: profile } = useProfileQuery();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { theme, setTheme } = useTheme();
 
   const handleLogout = async () => {
     try {
       await logout().unwrap();
+      // Reset all API states to clear cache for the next user
+      dispatch(authApi.util.resetApiState());
+      dispatch(accountApi.util.resetApiState());
+      dispatch(transitionApi.util.resetApiState());
       navigate("/login");
     } catch (err) {
       console.error("Logout failed:", err);
