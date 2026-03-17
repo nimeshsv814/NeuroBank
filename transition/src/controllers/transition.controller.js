@@ -57,18 +57,16 @@ export const createTransition = async (req, res) => {
     });
   }
 
-  // Derive sender balance from ledger
-  const senderBalance = await Ledger.findOne({
-    accountId: fromAccount,
-  });
-  if (!senderBalance) {
+  // Calculate sender balance from ledger (sum of credits - sum of debits)
+  const ledgerEntries = await Ledger.find({ accountId: fromAccount });
+  const balance = ledgerEntries.reduce((acc, entry) => {
+    return entry.type === "credit" ? acc + entry.amount : acc - entry.amount;
+  }, 0);
+
+  if (balance < amount) {
     return res.status(400).json({
-      message: "From account does not have a balance",
-    });
-  }
-  if (senderBalance.balance < amount) {
-    return res.status(400).json({
-      message: "From account does not have sufficient balance",
+      message: "Insufficient balance",
+      currentBalance: balance,
     });
   }
 
@@ -149,6 +147,32 @@ export const createTransition = async (req, res) => {
       transition,
       debitLedgerEntry,
       creditLedgerEntry,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getTransitions = async (req, res) => {
+  try {
+    const { accountId } = req.params;
+    if (!accountId) {
+      return res.status(400).json({
+        message: "Account ID is required",
+      });
+    }
+
+    const transitions = await Transition.find({
+      $or: [{ fromAccount: accountId }, { toAccount: accountId }],
+    })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .populate("fromAccount toAccount", "accountNumber status");
+
+    return res.status(200).json({
+      transitions,
     });
   } catch (error) {
     return res.status(500).json({

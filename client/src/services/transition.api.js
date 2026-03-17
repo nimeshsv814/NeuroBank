@@ -17,7 +17,15 @@ export const transitionApi = createApi({
       }),
       invalidatesTags: ["Transition"],
     }),
+    getHistory: build.query({
+      query: (accountId) => ({
+        url: `/history/${accountId}`,
+        method: "GET",
+      }),
+      providesTags: ["Transition"],
+    }),
   }),
 });
 
-export const { useCreateTransitionMutation } = transitionApi;
+export const { useCreateTransitionMutation, useGetHistoryQuery } =
+  transitionApi;
