@@ -7,17 +7,21 @@ export const startTransitionConsumer = async () => {
       const { fromAccount, toAccount, amount } = data;
 
       try {
-        // Update sender balance (Debit)
-        const senderAccount = await Account.findByIdAndUpdate(
-          fromAccount,
-          { $inc: { balance: -amount } },
-          { new: true }
-        );
+        // Update sender balance (Debit) - SKIP if minting from system (null fromAccount)
+        if (fromAccount) {
+          const senderAccount = await Account.findByIdAndUpdate(
+            fromAccount,
+            { $inc: { balance: -amount } },
+            { new: true }
+          );
 
-        if (senderAccount) {
-          console.log(`Account ${fromAccount} debited by ${amount}. New balance: ${senderAccount.balance}`);
+          if (senderAccount) {
+            console.log(`Account ${fromAccount} debited by ${amount}. New balance: ${senderAccount.balance}`);
+          } else {
+            console.error(`Sender account ${fromAccount} not found during balance sync`);
+          }
         } else {
-          console.error(`Sender account ${fromAccount} not found during balance sync`);
+          console.log(`System minting: No sender account to debit.`);
         }
 
         // Update receiver balance (Credit)

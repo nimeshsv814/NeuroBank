@@ -1,13 +1,25 @@
+import { useGetAccountQuery } from "../services/account.api";
+import { useGetHistoryQuery } from "../services/transition.api";
 import { Calendar, LayoutGrid, Plus, Menu } from "lucide-react";
 
 const Dashboard = ({ onMenuClick }) => {
-  // const { data, isLoading } = useGetDashboardQuery();
+  const { data: accountData, isLoading: isAccountLoading } = useGetAccountQuery();
+  const accountId = accountData?.account?._id;
+  const balance = accountData?.account?.balance || 0;
 
-  // if (isLoading) {
-  //   return <div className="flex-1 flex items-center justify-center text-white">Loading Dashboard...</div>;
-  // }
+  const { data: historyData, isLoading: isHistoryLoading } = useGetHistoryQuery(accountId, {
+    skip: !accountId
+  });
 
-  // const dashboardData = data?.data;
+  const transactions = historyData?.transitions || [];
+
+  if (isAccountLoading || isHistoryLoading) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-[#0c0f1a]">
+        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-gray-50 dark:bg-[#0c0f1a] transition-colors duration-300">
@@ -78,10 +90,13 @@ const Dashboard = ({ onMenuClick }) => {
           </h3>
           <div className="flex flex-wrap items-end gap-3 mb-4">
             <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-              {"No balance available."}
+              {balance.toLocaleString("en-IN", {
+                style: "currency",
+                currency: "INR",
+              })}
             </span>
             <span className="text-emerald-600 dark:text-emerald-400 font-medium flex items-center bg-emerald-100 dark:bg-emerald-400/10 px-2 py-0.5 rounded text-[10px] sm:text-xs mb-1">
-              ↑ {"No percentage change available."}
+              ↑ 0%
               <span className="text-gray-500 dark:text-gray-400 ml-1">
                 From last month
               </span>
@@ -90,7 +105,7 @@ const Dashboard = ({ onMenuClick }) => {
           <div className="flex gap-2 mb-8">
             <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg border border-gray-200 dark:border-white/10 text-xs text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-transparent">
               <span className="text-gray-400 dark:text-gray-500">⇄</span>{" "}
-              {"No transactions available."}
+              {transactions.length} Transactions
             </div>
             <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg border border-gray-200 dark:border-white/10 text-xs text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-transparent">
               <span className="text-gray-400 dark:text-gray-500">⬡</span>{" "}

@@ -244,6 +244,19 @@ export const generateInitialFunds = async (req, res) => {
       });
     }
 
+    // Check system user's balance from ledger
+    const ledgerEntries = await Ledger.find({ accountId: fromUserAccount._id });
+    const systemBalance = ledgerEntries.reduce((acc, entry) => {
+      return entry.type === "credit" ? acc + entry.amount : acc - entry.amount;
+    }, 0);
+
+    if (systemBalance < amount) {
+      return res.status(400).json({
+        message: `System balance too low (${systemBalance}). Please fund the system account first.`,
+        currentBalance: systemBalance,
+      });
+    }
+
     const session = await mongoose.startSession();
     session.startTransaction();
 
