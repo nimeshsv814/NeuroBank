@@ -5,9 +5,16 @@ import { connectMQ } from "./src/broker/rabbit.js";
 
 const port = config.PORT;
 
-connectDB();
-connectMQ();
+const bootstrap = async () => {
+  connectDB();
+  await connectMQ();
 
-app.listen(port, () => {
-  console.log(`Server is running on port http://localhost:${port}`);
+  app.listen(port, () => {
+    console.log(`Server is running on port http://localhost:${port}`);
+  });
+};
+
+bootstrap().catch((error) => {
+  console.error("Failed to start auth service:", error);
+  process.exit(1);
 });

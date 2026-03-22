@@ -6,11 +6,17 @@ import { startAccountConsumer } from "./src/broker/accountConsumer.js";
 
 const port = config.PORT;
 
-connectDB();
-connectMQ().then(() => {
-  startAccountConsumer();
-});
+const bootstrap = async () => {
+  connectDB();
+  await connectMQ();
+  await startAccountConsumer();
 
-app.listen(port, () => {
-  console.log(`Server is running on port http://localhost:${port}`);
+  app.listen(port, () => {
+    console.log(`Server is running on port http://localhost:${port}`);
+  });
+};
+
+bootstrap().catch((error) => {
+  console.error("Failed to start transition service:", error);
+  process.exit(1);
 });
