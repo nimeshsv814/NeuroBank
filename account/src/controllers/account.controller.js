@@ -26,6 +26,15 @@ export const createAccount = async (req, res) => {
       ownerEmail: req.user.email,
       ownerName: req.user.fullName,
     });
+    await publishToQueue("notification.account_created", {
+      email: req.user.email,
+      ownerName: req.user.fullName,
+      accountNumber: account.accountNumber,
+      accountType: account.accountType,
+      balance: account.balance,
+      currency: account.currency,
+      status: account.status,
+    });
     return res.status(201).json({ message: "Account Created", account });
   } catch (error) {
     return res.status(500).json({

@@ -9,32 +9,88 @@ export const initNotificationConsumer = () => {
     const template = `
 <!doctype html>
 <html>
-  <head>
-    <style>
-      body { font-family: "Segoe UI", sans-serif; color: #333; }
-      .container { max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px; }
-      .header { background: #4f46e5; color: white; padding: 20px; text-align: center; }
-      .content { padding: 20px; }
-      .footer { text-align: center; font-size: 12px; color: #777; padding: 10px; }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>Welcome to NeuroBank</h1>
-      </div>
-      <div class="content">
-        <p>Hello ${firstName} ${lastName},</p>
-        <p>Your account has been created successfully.</p>
-        <p>We are happy to have you onboard.</p>
-      </div>
-      <div class="footer">© 2026 NeuroBank</div>
+<head>
+  <style>
+    body { font-family: Arial; background:#f4f6f8; }
+    .container { max-width:600px; margin:auto; background:#fff; border-radius:10px; overflow:hidden; }
+    .header { background:#4f46e5; color:white; padding:25px; text-align:center; }
+    .content { padding:25px; color:#333; }
+    .btn { display:inline-block; padding:12px 20px; background:#4f46e5; color:white; text-decoration:none; border-radius:5px; margin-top:15px; }
+    .footer { text-align:center; font-size:12px; color:#888; padding:15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Welcome to NeuroBank 🎉</h1>
     </div>
-  </body>
+    <div class="content">
+      <p>Hello <b>${firstName} ${lastName}</b>,</p>
+      <p>Your account has been successfully created.</p>
+      <p>Now you can manage your money, send payments, and track transactions easily.</p>
+      <a class="btn">Get Started</a>
+    </div>
+    <div class="footer">
+      © 2026 NeuroBank. All rights reserved.
+    </div>
+  </div>
+</body>
 </html>
-    `;
+`;
 
     await sendEmail(email, "Welcome to NeuroBank", "", template);
+  });
+
+  // ✅ ACCOUNT CREATED
+  subscribeToQueue("account_created", async (data) => {
+    const {
+      email,
+      ownerName,
+      accountNumber,
+      accountType,
+      balance,
+      currency,
+      status,
+    } = data;
+
+    const template = `
+<!doctype html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial; background:#f4f6f8; }
+    .container { max-width:600px; margin:auto; background:#fff; border-radius:10px; }
+    .header { background:#0ea5e9; color:white; padding:20px; text-align:center; }
+    .content { padding:25px; }
+    .box { background:#f1f5f9; padding:15px; border-radius:6px; }
+    .footer { text-align:center; font-size:12px; color:#888; padding:15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Account Created 🏦</h1>
+    </div>
+    <div class="content">
+      <p>Hello <b>${ownerName}</b>,</p>
+      <p>Your bank account has been successfully created.</p>
+
+      <div class="box">
+        <p><b>Account Number:</b> ${accountNumber}</p>
+        <p><b>Account Type:</b> ${accountType}</p>
+        <p><b>Balance:</b> ${balance} ${currency}</p>
+        <p><b>Status:</b> ${status}</p>
+      </div>
+
+      <p>You can now start using your account.</p>
+    </div>
+    <div class="footer">
+      © 2026 NeuroBank
+    </div>
+  </div>
+</body>
+</html>
+`;
   });
 
   // ✅ USER CREDITED
@@ -45,36 +101,41 @@ export const initNotificationConsumer = () => {
     const template = `
 <!doctype html>
 <html>
-  <head>
-    <style>
-      body { font-family: "Segoe UI", sans-serif; color: #333; }
-      .container { max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px; }
-      .header { background: #16a34a; color: white; padding: 20px; text-align: center; }
-      .content { padding: 20px; }
-      .box { background: #f3f4f6; padding: 15px; border-radius: 5px; }
-      .footer { text-align: center; font-size: 12px; color: #777; padding: 10px; }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>Amount Credited</h1>
-      </div>
-      <div class="content">
-        <p>Hello ${firstName},</p>
-        <p>Your account has been credited.</p>
-        <div class="box">
-          <p><strong>Amount:</strong> ${amount}</p>
-          <p><strong>From:</strong> ${fromAccount}</p>
-          <p><strong>Date:</strong> ${dateTime}</p>
-          <p><strong>Transaction ID:</strong> ${transactionId}</p>
-        </div>
-      </div>
-      <div class="footer">© 2026 NeuroBank</div>
+<head>
+  <style>
+    body { font-family: Arial; background:#f4f6f8; }
+    .container { max-width:600px; margin:auto; background:#fff; border-radius:10px; }
+    .header { background:#22c55e; color:white; padding:20px; text-align:center; }
+    .content { padding:25px; }
+    .box { background:#ecfdf5; padding:15px; border-radius:6px; }
+    .footer { text-align:center; font-size:12px; color:#888; padding:15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Amount Credited 💰</h1>
     </div>
-  </body>
+    <div class="content">
+      <p>Hello <b>${firstName}</b>,</p>
+      <p>Your account has been credited successfully.</p>
+
+      <div class="box">
+        <p><b>Amount:</b> ${amount}</p>
+        <p><b>From:</b> ${fromAccount}</p>
+        <p><b>Date:</b> ${dateTime}</p>
+        <p><b>Transaction ID:</b> ${transactionId}</p>
+      </div>
+
+      <p>Thank you for banking with us.</p>
+    </div>
+    <div class="footer">
+      © 2026 NeuroBank
+    </div>
+  </div>
+</body>
 </html>
-    `;
+`;
 
     await sendEmail(email, "Amount Credited", "", template);
   });
@@ -87,37 +148,41 @@ export const initNotificationConsumer = () => {
     const template = `
 <!doctype html>
 <html>
-  <head>
-    <style>
-      body { font-family: "Segoe UI", sans-serif; color: #333; }
-      .container { max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px; }
-      .header { background: #dc2626; color: white; padding: 20px; text-align: center; }
-      .content { padding: 20px; }
-      .box { background: #f3f4f6; padding: 15px; border-radius: 5px; }
-      .footer { text-align: center; font-size: 12px; color: #777; padding: 10px; }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>Amount Debited</h1>
-      </div>
-      <div class="content">
-        <p>Hello ${firstName},</p>
-        <p>Your account has been debited.</p>
-        <div class="box">
-          <p><strong>Amount:</strong> ${amount}</p>
-          <p><strong>To:</strong> ${toAccount}</p>
-          <p><strong>Date:</strong> ${dateTime}</p>
-          <p><strong>Transaction ID:</strong> ${transactionId}</p>
-        </div>
-        <p>If this was not you, contact support immediately.</p>
-      </div>
-      <div class="footer">© 2026 NeuroBank</div>
+<head>
+  <style>
+    body { font-family: Arial; background:#f4f6f8; }
+    .container { max-width:600px; margin:auto; background:#fff; border-radius:10px; }
+    .header { background:#ef4444; color:white; padding:20px; text-align:center; }
+    .content { padding:25px; }
+    .box { background:#fef2f2; padding:15px; border-radius:6px; }
+    .footer { text-align:center; font-size:12px; color:#888; padding:15px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Amount Debited ⚠️</h1>
     </div>
-  </body>
+    <div class="content">
+      <p>Hello <b>${firstName}</b>,</p>
+      <p>Your account has been debited.</p>
+
+      <div class="box">
+        <p><b>Amount:</b> ${amount}</p>
+        <p><b>To:</b> ${toAccount}</p>
+        <p><b>Date:</b> ${dateTime}</p>
+        <p><b>Transaction ID:</b> ${transactionId}</p>
+      </div>
+
+      <p>If this was not you, contact support immediately.</p>
+    </div>
+    <div class="footer">
+      © 2026 NeuroBank
+    </div>
+  </div>
+</body>
 </html>
-    `;
+`;
 
     await sendEmail(email, "Amount Debited", "", template);
   });
