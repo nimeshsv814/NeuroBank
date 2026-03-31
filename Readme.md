@@ -26,6 +26,34 @@ This project is mainly built for **learning system design and backend architectu
 
 ---
 
+# Project Screenshots
+
+### Authentication & Onboarding
+
+| Login Page | Registration Page |
+| :--- | :--- |
+| ![Login Page](./client/public/login.png) | ![Registration Page](./client/public/register.png) |
+
+### Core Dashboard & Accounts
+
+| Dashboard Overview | Accounts Summary |
+| :--- | :--- |
+| ![Dashboard](./client/public/dashboard.png) | ![Accounts](./client/public/accounts.png) |
+
+### Banking Operations
+
+| Transfer Money | Transaction History |
+| :--- | :--- |
+| ![Transfer](./client/public/transfer.png) | ![History](./client/public/history.png) |
+
+### User Profile
+
+| Profile Settings |
+| :--- |
+| ![Profile](./client/public/profile.png) |
+
+---
+
 # Tech Stack
 
 ### Frontend
